@@ -1,0 +1,236 @@
+/* ============================================================
+   TaskFlow · auth.css — экран входа и регистрации
+   ============================================================ */
+
+.auth {
+  align-items: center;
+  gap: 40px;
+  padding: 48px clamp(20px, 5vw, 72px);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.auth__aside { display: flex; flex-direction: column; gap: 22px; max-width: 560px; }
+.auth__aside > * { animation: fadeUp .7s var(--ease) both; }
+.auth__aside > *:nth-child(1) { animation-delay: .04s; }
+.auth__aside > *:nth-child(2) { animation-delay: .1s; }
+.auth__aside > *:nth-child(3) { animation-delay: .16s; }
+.auth__aside > *:nth-child(4) { animation-delay: .22s; }
+.auth__aside > *:nth-child(5) { animation-delay: .28s; }
+
+.auth__title {
+  font-size: clamp(38px, 5.2vw, 62px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: 1.04;
+}
+.auth__sub { max-width: 470px; color: var(--text-dim); font-size: 15.5px; }
+
+.feature-list { display: grid; gap: 11px; }
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 14px;
+  transition: transform var(--mid), border-color var(--fast), background var(--fast), color var(--fast);
+}
+.feature-list li:hover {
+  transform: translateX(8px);
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+.feature-list__ico {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  font-size: 16px;
+  background: var(--surface-3);
+  flex: none;
+}
+
+/* Мини-превью карточек на асфальте авторизации */
+.auth__preview { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.mini-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  animation: floatY 6s var(--ease-in-out) infinite;
+}
+.mini-card--b { animation-delay: -1.4s; margin-left: 26px; }
+.mini-card--c { animation-delay: -2.8s; margin-left: 52px; }
+.mini-card__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 14px var(--brand-2); }
+.mini-card__dot--ok { background: var(--ok); box-shadow: 0 0 14px var(--ok); }
+.mini-card__dot--warn { background: var(--warn); box-shadow: 0 0 14px var(--warn); }
+.mini-card__line {
+  height: 8px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--surface-3), transparent);
+}
+.mini-card__line::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: var(--w, 62%);
+  border-radius: 99px;
+  background: var(--surface-3);
+}
+.mini-card__bar {
+  grid-column: 2;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--brand-2);
+  opacity: .5;
+  animation: linePulse 3.2s var(--ease-in-out) infinite;
+}
+.mini-card__bar--ok { background: var(--ok); animation-delay: -1s; }
+.mini-card__bar--warn { background: var(--warn); animation-delay: -2s; }
+@keyframes linePulse {
+  0%, 100% { width: 32%; }
+  50% { width: 88%; }
+}
+
+/* -------------------- Панель с формами ---------------------- */
+.auth__panel {
+  width: min(480px, 100%);
+  justify-self: center;
+  animation: slideUp .7s var(--ease) .1s both;
+}
+.auth__card { padding: 30px clamp(20px, 3vw, 34px) 26px; overflow: hidden; }
+.auth__card-glow {
+  position: absolute;
+  inset: -1px -1px auto;
+  height: 3px;
+  background: var(--grad);
+  background-size: 200% 100%;
+  animation: gradShift 6s var(--ease-in-out) infinite;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px;
+  margin-bottom: 22px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.tabs__thumb {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  height: calc(100% - 10px);
+  border-radius: 10px;
+  background: var(--grad);
+  box-shadow: 0 10px 24px -12px color-mix(in oklab, var(--brand-2) 95%, transparent);
+  transition: transform .42s var(--ease);
+}
+.tabs[data-active="register"] .tabs__thumb { transform: translateX(100%); }
+.tabs__btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 650;
+  font-size: 14px;
+  color: var(--muted);
+  transition: color var(--mid);
+}
+.tabs__btn.is-active { color: #fff; }
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  color: color-mix(in oklab, var(--danger) 78%, white);
+  background: color-mix(in oklab, var(--danger) 16%, transparent);
+  border: 1px solid color-mix(in oklab, var(--danger) 38%, transparent);
+  animation: slideUp .4s var(--ease);
+}
+.alert--ok {
+  color: color-mix(in oklab, var(--ok) 78%, white);
+  background: color-mix(in oklab, var(--ok) 15%, transparent);
+  border-color: color-mix(in oklab, var(--ok) 38%, transparent);
+}
+.alert__ico { flex: none; }
+
+/* ------------------------- Формы ---------------------------- */
+.form { display: grid; gap: 21px; }
+.form--hidden { display: none; }
+.form:not(.form--hidden) { animation: fadeUp .46s var(--ease); }
+.form > .row--between { margin-top: -3px; }
+.form .divider { margin: 3px 0; }
+
+.strength { display: grid; gap: 8px; margin-top: -8px; }
+.strength__bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.strength__bars i {
+  height: 5px;
+  border-radius: 99px;
+  background: var(--surface-3);
+  transition: background var(--mid), box-shadow var(--mid), transform var(--mid);
+}
+.strength[data-level="1"] .strength__bars i:nth-child(1) { background: var(--danger); box-shadow: 0 0 12px color-mix(in oklab, var(--danger) 70%, transparent); }
+.strength[data-level="2"] .strength__bars i:nth-child(-n+2) { background: var(--warn); box-shadow: 0 0 12px color-mix(in oklab, var(--warn) 60%, transparent); }
+.strength[data-level="3"] .strength__bars i:nth-child(-n+3) { background: var(--info); box-shadow: 0 0 12px color-mix(in oklab, var(--info) 60%, transparent); }
+.strength[data-level="4"] .strength__bars i { background: var(--ok); box-shadow: 0 0 12px color-mix(in oklab, var(--ok) 60%, transparent); }
+.strength__label { font-size: 11.5px; color: var(--muted); }
+.strength__rules { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: var(--muted); }
+.strength__rules li { display: flex; align-items: center; gap: 5px; transition: color var(--fast); }
+.strength__rules li::before { content: '○'; font-size: 10px; }
+.strength__rules li.is-ok { color: color-mix(in oklab, var(--ok) 82%, white); }
+.strength__rules li.is-ok::before { content: '●'; }
+
+.avatar-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.avatar-opt {
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  font-size: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: transform var(--fast), border-color var(--fast), background var(--fast), box-shadow var(--fast);
+}
+.avatar-opt:hover { transform: translateY(-4px) scale(1.07); border-color: var(--border-strong); }
+.avatar-opt.is-active {
+  background: color-mix(in oklab, var(--brand-2) 24%, transparent);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand-2) 75%, transparent);
+  animation: pop .42s var(--bounce);
+}
+
+.auth__foot { margin-top: 18px; text-align: center; font-size: 13.5px; color: var(--muted); }
+
+/* ------------------------ Адаптивность ---------------------- */
+@media (max-width: 1080px) {
+  #auth-screen { grid-template-columns: 1fr; }
+  .auth__aside { max-width: none; }
+  .auth__preview { display: none; }
+  .auth__panel { width: min(520px, 100%); }
+}
+@media (max-width: 620px) {
+  .auth { padding: 28px 18px 40px; gap: 26px; }
+  .auth__card { padding: 24px 18px 22px; }
+  .auth__title { font-size: 34px; }
+  .feature-list li { font-size: 13px; }
+}
+

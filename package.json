@@ -1,0 +1,17 @@
+{
+  "name": "impact4-task-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Анимированный трекер задач с регистрацией, канбан-доской, статистикой и тёмной/светлой темой. Без внешних зависимостей.",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "check": "node tools/dom-check.mjs",
+    "smoke": "node tools/server-smoke.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

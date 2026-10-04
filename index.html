@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TaskFlow — анимированный трекер задач с регистрацией, канбан-доской и статистикой" />
+  <title>TaskFlow — трекер задач</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./src/styles/base.css" />
+  <link rel="stylesheet" href="./src/styles/auth.css" />
+  <link rel="stylesheet" href="./src/styles/app.css" />
+  <link rel="stylesheet" href="./src/styles/components.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>" />
+</head>
+<body>
+  <!-- Анимированный фон -->
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__blob aurora__blob--1"></span>
+    <span class="aurora__blob aurora__blob--2"></span>
+    <span class="aurora__blob aurora__blob--3"></span>
+    <span class="aurora__grid"></span>
+  </div>
+  <div id="spotlight" class="spotlight" aria-hidden="true"></div>
+
+  <!-- ======================= ЭКРАН АВТОРИЗАЦИИ ======================= -->
+  <section id="auth-screen" class="screen auth" aria-label="Вход и регистрация">
+    <aside class="auth__aside">
+      <div class="brand brand--lg">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9 17.5 20 6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand__name">Task<em>Flow</em></span>
+      </div>
+
+      <h1 class="auth__title">
+        Планируй. Делай.<br /><span class="grad-text">Побеждай.</span>
+      </h1>
+      <p class="auth__sub">
+        Красивый трекер задач с канбан-доской, статистикой прогресса, приоритетами,
+        дедлайнами и подзадачами. Все данные хранятся локально в вашем браузере.
+      </p>
+
+      <ul class="feature-list">
+        <li><span class="feature-list__ico">🎯</span> Приоритеты, теги и дедлайны</li>
+        <li><span class="feature-list__ico">🗂️</span> Канбан-доска с перетаскиванием</li>
+        <li><span class="feature-list__ico">📊</span> Статистика и прогресс-кольцо</li>
+        <li><span class="feature-list__ico">⏱️</span> Помодоро-таймер и учёт времени</li>
+        <li><span class="feature-list__ico">🔐</span> Регистрация с хешированием пароля</li>
+      </ul>
+
+      <div class="auth__preview" aria-hidden="true">
+        <div class="mini-card mini-card--a">
+          <span class="mini-card__dot"></span>
+          <span class="mini-card__line"></span>
+          <span class="mini-card__bar"></span>
+        </div>
+        <div class="mini-card mini-card--b">
+          <span class="mini-card__dot mini-card__dot--ok"></span>
+          <span class="mini-card__line"></span>
+          <span class="mini-card__bar mini-card__bar--ok"></span>
+        </div>
+        <div class="mini-card mini-card--c">
+          <span class="mini-card__dot mini-card__dot--warn"></span>
+          <span class="mini-card__line"></span>
+          <span class="mini-card__bar mini-card__bar--warn"></span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="auth__panel">
+      <div class="card auth__card">
+        <div class="auth__card-glow" aria-hidden="true"></div>
+
+        <div class="tabs" role="tablist" aria-label="Режим авторизации">
+          <span class="tabs__thumb" id="tabs-thumb" aria-hidden="true"></span>
+          <button type="button" class="tabs__btn is-active" role="tab" aria-selected="true" data-tab="login">Вход</button>
+          <button type="button" class="tabs__btn" role="tab" aria-selected="false" data-tab="register">Регистрация</button>
+        </div>
+
+        <div id="auth-alert" class="alert" role="alert" hidden>
+          <span class="alert__ico">⚠️</span><span class="alert__text"></span>
+        </div>
+
+        <!-- ---------- Форма входа ---------- -->
+        <form id="login-form" class="form" data-pane="login" novalidate>
+          <label class="field">
+            <input type="email" name="email" id="login-email" placeholder=" " autocomplete="email" required />
+            <span class="field__label">Email</span>
+            <span class="field__error" data-error-for="email"></span>
+          </label>
+
+          <label class="field">
+            <input type="password" name="password" id="login-password" placeholder=" " autocomplete="current-password" required />
+            <span class="field__label">Пароль</span>
+            <button type="button" class="field__toggle" data-toggle-password="login-password" aria-label="Показать пароль">👁</button>
+            <span class="field__error" data-error-for="password"></span>
+          </label>
+
+          <div class="row row--between">
+            <label class="check">
+              <input type="checkbox" name="remember" checked />
+              <span class="check__box"></span>
+              <span class="check__label">Запомнить меня</span>
+            </label>
+            <button type="button" class="link-btn" id="forgot-link">Забыли пароль?</button>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block" id="login-submit">
+            <span class="btn__text">Войти</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <div class="divider"><span>или</span></div>
+
+          <button type="button" class="btn btn--ghost btn--block" id="demo-login">
+            🚀 Попробовать демо-режим
+          </button>
+        </form>
+        <!-- ---------- Форма регистрации ---------- -->
+        <form id="register-form" class="form form--hidden" data-pane="register" novalidate>
+          <div class="field field--avatar">
+            <span class="field__label field__label--static">Ваш аватар</span>
+            <div class="avatar-picker" id="avatar-picker" role="radiogroup" aria-label="Выбор аватара">
+              <button type="button" class="avatar-opt is-active" role="radio" aria-checked="true" data-avatar="🦊">🦊</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🐼">🐼</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🐙">🐙</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🦉">🦉</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🐳">🐳</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🦄">🦄</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🐝">🐝</button>
+              <button type="button" class="avatar-opt" role="radio" aria-checked="false" data-avatar="🐧">🐧</button>
+            </div>
+            <input type="hidden" name="avatar" id="register-avatar" value="🦊" />
+          </div>
+
+          <label class="field">
+            <input type="text" name="name" id="register-name" placeholder=" " autocomplete="name" maxlength="32" required />
+            <span class="field__label">Имя</span>
+            <span class="field__error" data-error-for="name"></span>
+          </label>
+
+          <label class="field">
+            <input type="email" name="email" id="register-email" placeholder=" " autocomplete="email" required />
+            <span class="field__label">Email</span>
+            <span class="field__error" data-error-for="email"></span>
+          </label>
+
+          <label class="field">
+            <input type="password" name="password" id="register-password" placeholder=" " autocomplete="new-password" required />
+            <span class="field__label">Пароль</span>
+            <button type="button" class="field__toggle" data-toggle-password="register-password" aria-label="Показать пароль">👁</button>
+            <span class="field__error" data-error-for="password"></span>
+          </label>
+
+          <div class="strength" id="strength" data-level="0">
+            <div class="strength__bars"><i></i><i></i><i></i><i></i></div>
+            <span class="strength__label">Надёжность пароля</span>
+            <ul class="strength__rules">
+              <li data-rule="length">8+ символов</li>
+              <li data-rule="letter">буква</li>
+              <li data-rule="digit">цифра</li>
+            </ul>
+          </div>
+
+          <label class="field">
+            <input type="password" name="confirm" id="register-confirm" placeholder=" " autocomplete="new-password" required />
+            <span class="field__label">Повторите пароль</span>
+            <button type="button" class="field__toggle" data-toggle-password="register-confirm" aria-label="Показать пароль">👁</button>
+            <span class="field__error" data-error-for="confirm"></span>
+          </label>
+
+          <label class="check">
+            <input type="checkbox" name="terms" id="register-terms" />
+            <span class="check__box"></span>
+            <span class="check__label">Я согласен с условиями использования</span>
+            <span class="field__error" data-error-for="terms"></span>
+          </label>
+
+          <button type="submit" class="btn btn--primary btn--block" id="register-submit">
+            <span class="btn__text">Создать аккаунт</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <p class="auth__foot">
+          Уже есть аккаунт? <button type="button" class="link-btn" data-goto="login">Войти</button>
+        </p>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================= ОСНОВНОЕ ПРИЛОЖЕНИЕ ======================= -->
+  <section id="app-screen" class="screen app" hidden aria-label="Трекер задач">
+    <header class="topbar">
+      <button type="button" class="icon-btn topbar__burger" id="sidebar-toggle" aria-label="Меню">☰</button>
+
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9 17.5 20 6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand__name">Task<em>Flow</em></span>
+      </div>
+
+      <div class="search" role="search">
+        <span class="search__ico" aria-hidden="true">🔍</span>
+        <input type="search" id="search-input" placeholder="Поиск задач…" autocomplete="off" aria-label="Поиск задач" />
+        <button type="button" class="search__clear" id="search-clear" aria-label="Очистить" hidden>✕</button>
+        <kbd class="search__kbd">Ctrl K</kbd>
+      </div>
+
+      <div class="topbar__actions">
+        <div class="seg" id="view-switch" role="tablist" aria-label="Вид">
+          <span class="seg__thumb" id="seg-thumb" aria-hidden="true"></span>
+          <button type="button" class="seg__btn is-active" role="tab" aria-selected="true" data-view="list">☰ Список</button>
+          <button type="button" class="seg__btn" role="tab" aria-selected="false" data-view="board">▦ Доска</button>
+        </div>
+
+        <button type="button" class="icon-btn timer-btn" id="timer-btn" data-mode="work"
+          aria-haspopup="dialog" aria-expanded="false" aria-label="Помодоро-таймер" title="Помодоро-таймер (T)">
+          <span class="timer-btn__ico" aria-hidden="true">⏱</span>
+          <span class="timer-btn__time" id="timer-btn-time" hidden>25:00</span>
+        </button>
+
+        <button type="button" class="icon-btn" id="theme-toggle" aria-label="Переключить тему" title="Сменить тему">🌙</button>
+
+        <button type="button" class="btn btn--primary btn--glow" id="add-task-btn">
+          <span aria-hidden="true">＋</span> Новая задача
+        </button>
+
+        <div class="userchip" id="userchip">
+          <button type="button" class="userchip__btn" id="userchip-btn" aria-haspopup="menu" aria-expanded="false">
+            <span class="avatar" id="userchip-avatar">🦊</span>
+            <span class="userchip__name" id="userchip-name">Гость</span>
+            <span class="userchip__caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="menu" id="userchip-menu" role="menu" hidden>
+            <div class="menu__head">
+              <span class="avatar avatar--lg" id="menu-avatar">🦊</span>
+              <div>
+                <strong id="menu-name">Гость</strong>
+                <small id="menu-email">guest@taskflow.local</small>
+              </div>
+            </div>
+            <button type="button" class="menu__item" role="menuitem" id="menu-profile">👤 Профиль</button>
+            <button type="button" class="menu__item" role="menuitem" id="menu-export">⬇️ Экспорт JSON</button>
+            <button type="button" class="menu__item" role="menuitem" id="menu-clear-done">🧹 Удалить выполненные</button>
+            <button type="button" class="menu__item menu__item--danger" role="menuitem" id="menu-logout">🚪 Выйти</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app__body">
+      <aside class="sidebar" id="sidebar">
+        <div class="profile-card">
+          <span class="avatar avatar--xl" id="side-avatar">🦊</span>
+          <div class="profile-card__info">
+            <strong id="side-name">Гость</strong>
+            <small id="side-email">guest@taskflow.local</small>
+            <div class="profile-card__bar" title="Выполнено задач">
+              <span id="side-progress-bar"></span>
+            </div>
+            <small class="profile-card__hint" id="side-progress-text">0% выполнено</small>
+          </div>
+        </div>
+
+        <nav class="side-nav" aria-label="Фильтры">
+          <p class="side-nav__title">Обзор</p>
+          <button type="button" class="side-nav__item is-active" data-nav="all"><span class="ico">📥</span> Все задачи <b class="badge" id="count-all">0</b></button>
+          <button type="button" class="side-nav__item" data-nav="today"><span class="ico">📅</span> Сегодня <b class="badge" id="count-today">0</b></button>
+          <button type="button" class="side-nav__item" data-nav="upcoming"><span class="ico">⏭️</span> Предстоящие <b class="badge" id="count-upcoming">0</b></button>
+          <button type="button" class="side-nav__item" data-nav="overdue"><span class="ico">🔥</span> Просроченные <b class="badge badge--danger" id="count-overdue">0</b></button>
+          <button type="button" class="side-nav__item" data-nav="done"><span class="ico">✅</span> Выполненные <b class="badge" id="count-done">0</b></button>
+        </nav>
+        <div class="side-cats">
+          <p class="side-nav__title">Категории</p>
+          <div id="category-list" class="side-cats__list"></div>
+          <form id="category-form" class="side-cats__add">
+            <input type="text" id="category-name" placeholder="Новая категория…" maxlength="20" aria-label="Название категории" />
+            <button type="submit" class="icon-btn icon-btn--sm" aria-label="Добавить категорию">＋</button>
+          </form>
+        </div>
+
+        <div class="sidebar__foot">
+          <button type="button" class="side-nav__item" id="side-theme"><span class="ico">🌓</span> Тема <b class="badge" id="theme-label">Тёмная</b></button>
+          <button type="button" class="side-nav__item side-nav__item--danger" id="side-logout"><span class="ico">🚪</span> Выйти</button>
+          <p class="sidebar__hint">Данные хранятся локально · v1.0</p>
+        </div>
+
+      </aside>
+      <main class="main">
+        <section class="hero">
+          <div class="hero__text">
+            <h2 id="greeting">Привет 👋</h2>
+            <p id="today-label">Загрузка…</p>
+          </div>
+          <div class="hero__chips">
+            <span class="chip chip--soft" id="hero-streak" title="Задачи, выполненные сегодня">🔥 0 сегодня</span>
+            <span class="chip chip--soft" id="hero-focus" title="Задачи в работе">⚡ 0 в работе</span>
+            <span class="chip chip--soft" id="hero-time" title="Учтённое время по задачам">⏱ 0с</span>
+          </div>
+        </section>
+
+        <section class="stats" aria-label="Статистика">
+          <article class="stat-card" data-stat="total" style="--accent:#6366f1">
+            <div class="stat-card__top"><span class="stat-card__ico">📥</span><span class="stat-card__trend" data-trend="total"></span></div>
+            <strong class="stat-card__value" data-value="total">0</strong>
+            <span class="stat-card__label">Всего задач</span>
+            <div class="stat-card__glow" aria-hidden="true"></div>
+          </article>
+          <article class="stat-card" data-stat="progress" style="--accent:#f59e0b">
+            <div class="stat-card__top"><span class="stat-card__ico">⚡</span><span class="stat-card__trend" data-trend="progress"></span></div>
+            <strong class="stat-card__value" data-value="progress">0</strong>
+            <span class="stat-card__label">В работе</span>
+            <div class="stat-card__glow" aria-hidden="true"></div>
+          </article>
+          <article class="stat-card" data-stat="done" style="--accent:#10b981">
+            <div class="stat-card__top"><span class="stat-card__ico">✅</span><span class="stat-card__trend" data-trend="done"></span></div>
+            <strong class="stat-card__value" data-value="done">0</strong>
+            <span class="stat-card__label">Выполнено</span>
+            <div class="stat-card__glow" aria-hidden="true"></div>
+          </article>
+          <article class="stat-card" data-stat="overdue" style="--accent:#ef4444">
+            <div class="stat-card__top"><span class="stat-card__ico">🔥</span><span class="stat-card__trend" data-trend="overdue"></span></div>
+            <strong class="stat-card__value" data-value="overdue">0</strong>
+            <span class="stat-card__label">Просрочено</span>
+            <div class="stat-card__glow" aria-hidden="true"></div>
+          </article>
+        <article class="stat-card" data-stat="time" style="--accent:#06b6d4">
+            <div class="stat-card__top"><span class="stat-card__ico">⏱</span><span class="stat-card__trend" id="trend-time"></span></div>
+            <strong class="stat-card__value" data-value="time">0с</strong>
+            <span class="stat-card__label">Время в задачах</span>
+            <div class="stat-card__glow" aria-hidden="true"></div>
+          </article>
+        </section>
+
+        <section class="panel panel--progress">
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 120 120" role="img" aria-label="Общий прогресс">
+              <defs>
+                <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="55%" stop-color="#a855f7" />
+                  <stop offset="100%" stop-color="#ec4899" />
+                </linearGradient>
+              </defs>
+              <circle class="ring__track" cx="60" cy="60" r="52" />
+              <circle class="ring__value" id="ring-value" cx="60" cy="60" r="52" />
+            </svg>
+            <div class="ring__center">
+              <strong id="ring-percent">0%</strong>
+              <small>готово</small>
+            </div>
+          </div>
+
+          <div class="panel__col">
+            <h3 class="panel__title">Прогресс за неделю</h3>
+            <div class="chart" id="week-chart" aria-label="Выполнено задач за 7 дней"></div>
+          </div>
+
+          <div class="panel__col">
+            <h3 class="panel__title">По приоритетам</h3>
+            <div class="bars" id="priority-bars"></div>
+            <p class="time-summary" id="time-summary">🍅 0 помодоро · ⏱ 0с учтено</p>
+          </div>
+        </section>
+        <section class="filters" id="filters" aria-label="Фильтры">
+          <div class="filters__row">
+            <div class="chips" id="status-chips" role="group" aria-label="Статус">
+              <button type="button" class="chip is-active" data-status="all">Все</button>
+              <button type="button" class="chip" data-status="todo">К выполнению</button>
+              <button type="button" class="chip" data-status="progress">В работе</button>
+              <button type="button" class="chip" data-status="done">Готово</button>
+            </div>
+
+            <label class="select">
+              <span class="select__label">Приоритет</span>
+              <select id="filter-priority">
+                <option value="all">Любой</option>
+                <option value="urgent">🔥 Срочный</option>
+                <option value="high">Высокий</option>
+                <option value="medium">Средний</option>
+                <option value="low">Низкий</option>
+              </select>
+            </label>
+
+            <label class="select">
+              <span class="select__label">Категория</span>
+              <select id="filter-category"></select>
+            </label>
+
+            <label class="select">
+              <span class="select__label">Сортировка</span>
+              <select id="filter-sort">
+                <option value="smart">Умная</option>
+                <option value="due">По дедлайну</option>
+                <option value="priority">По приоритету</option>
+                <option value="created">Сначала новые</option>
+                <option value="title">По алфавиту</option>
+                <option value="manual">Вручную</option>
+              </select>
+            </label>
+
+            <label class="check check--sm">
+              <input type="checkbox" id="filter-hide-done" />
+              <span class="check__box"></span>
+              <span class="check__label">Скрыть выполненные</span>
+            </label>
+
+            <button type="button" class="btn btn--ghost btn--sm" id="filters-reset">↺ Сбросить</button>
+          </div>
+        </section>
+
+
+        <section class="content">
+          <div class="content__head">
+            <h3 class="content__title" id="content-title">Все задачи</h3>
+            <span class="content__hint" id="content-hint"></span>
+          </div>
+
+          <div id="task-list" class="task-list" role="list"></div>
+          <div id="board" class="board" hidden></div>
+
+          <div id="empty-state" class="empty" hidden>
+            <div class="empty__art" aria-hidden="true">
+              <span class="empty__ring"></span>
+              <span class="empty__ring empty__ring--2"></span>
+              <span class="empty__emoji" id="empty-emoji">🗒️</span>
+            </div>
+            <h4 id="empty-title">Пока пусто</h4>
+            <p id="empty-text">Создайте первую задачу — и она появится здесь.</p>
+            <button type="button" class="btn btn--primary" id="empty-add">＋ Создать задачу</button>
+          </div>
+        </section>
+      </main>
+
+    </div>
+  </section>
+
+
+  <!-- Всплывающие уведомления -->
+  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Портал для модальных окон и диалогов -->
+  <div id="modal-root"></div>
+
+  <!-- Подсказка, если файл открыт напрямую (file://) без сервера -->
+  <div id="boot-fallback" class="boot-fallback" hidden>
+    <div class="boot-fallback__card">
+      <h2>Не удалось загрузить приложение</h2>
+      <p>Скорее всего страница открыта напрямую как файл. ES-модули работают только через сервер.</p>
+      <p>Откройте терминал в папке проекта и выполните:</p>
+      <pre><code>npm start</code></pre>
+      <p>Затем перейдите на <a href="http://localhost:4173">http://localhost:4173</a></p>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (!window.__TASKFLOW_BOOTED__) {
+          document.getElementById('boot-fallback').hidden = false;
+        }
+      }, 900);
+    });
+  </script>
+  <script type="module" src="./src/js/main.js"></script>
+</body>
+</html>
