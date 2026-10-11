@@ -438,9 +438,13 @@
 .task-card.is-done .task-card__title { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
 .task-card.is-dragging { opacity: .35; transform: scale(.98) rotate(-1.2deg); cursor: grabbing; }
 .task-card.is-over { border-color: color-mix(in oklab, var(--brand-2) 75%, transparent); transform: translateY(-3px) scale(1.01); }
-.task-card.is-removing { animation: cardOut .34s var(--ease) forwards; }
-.task-card.is-entering { animation: cardIn .5s var(--ease) both; animation-delay: calc(var(--i, 0) * 40ms); }
+/* fill-mode: backwards — только на время задержки/игры, иначе заполнение
+   блокировало бы hover-подъём, затемнение выполненных и drag-эффекты */
+.task-card.is-entering { animation: cardIn .5s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
 .task-card.is-bump { animation: cardBump .5s var(--bounce); }
+/* Правило удаления — строго ПОСЛЕ is-entering: при совпадении обоих классов
+   побеждает более позднее, иначе карточка проигрывала вход вместо выхода */
+.task-card.is-removing { animation: cardOut .34s var(--ease) forwards; }
 
 @keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
 @keyframes cardOut { to { opacity: 0; transform: translateX(46px) scale(.94); height: 0; margin-top: -11px; padding: 0; } }
@@ -531,7 +535,7 @@
   -webkit-backdrop-filter: var(--blur);
   box-shadow: var(--shadow-1);
   transition: border-color var(--fast), background var(--fast), transform var(--mid);
-  animation: fadeUp .6s var(--ease) both;
+  animation: fadeUp .6s var(--ease) backwards;
   animation-delay: calc(var(--i, 0) * 80ms);
 }
 .board-col.is-over {
@@ -599,6 +603,13 @@
     height: 100vh;
     height: 100dvh;
     max-height: none;
+    /* Анимация появления отключена: из-за fill-mode: both она перекрывала
+       transform и не давала шторке уехать за край экрана */
+    animation: none;
+    /* Непрозрачный фон — контент за шторкой не просвечивает */
+    background: var(--bg-soft);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     padding-top: max(15px, env(safe-area-inset-top));
     padding-left: max(15px, env(safe-area-inset-left));
     padding-bottom: max(15px, env(safe-area-inset-bottom));
