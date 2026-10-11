@@ -2,7 +2,8 @@
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#06070f" />
   <meta name="description" content="TaskFlow — анимированный трекер задач с регистрацией, канбан-доской и статистикой" />
   <title>TaskFlow — трекер задач</title>
 
@@ -217,8 +218,8 @@
       <div class="topbar__actions">
         <div class="seg" id="view-switch" role="tablist" aria-label="Вид">
           <span class="seg__thumb" id="seg-thumb" aria-hidden="true"></span>
-          <button type="button" class="seg__btn is-active" role="tab" aria-selected="true" data-view="list">☰ Список</button>
-          <button type="button" class="seg__btn" role="tab" aria-selected="false" data-view="board">▦ Доска</button>
+          <button type="button" class="seg__btn is-active" role="tab" aria-selected="true" data-view="list">☰ <span class="seg__label">Список</span></button>
+          <button type="button" class="seg__btn" role="tab" aria-selected="false" data-view="board">▦ <span class="seg__label">Доска</span></button>
         </div>
 
         <button type="button" class="icon-btn timer-btn" id="timer-btn" data-mode="work"

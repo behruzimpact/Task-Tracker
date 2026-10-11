@@ -53,7 +53,9 @@ export function attachPopover(anchor, panel, { onClose } = {}) {
 
   function place() {
     const rect = anchor.getBoundingClientRect();
-    const width = panel.dataset.width ? Number(panel.dataset.width) : rect.width;
+    const want = panel.dataset.width ? Number(panel.dataset.width) : rect.width;
+    // На узких экранах фиксированная ширина панели не должна превышать вьюпорт.
+    const width = Math.min(want, window.innerWidth - 24);
     panel.style.width = `${Math.max(160, width)}px`;
     const maxLeft = window.innerWidth - panel.offsetWidth - 12;
     panel.style.left = `${Math.max(12, Math.min(rect.left, maxLeft))}px`;

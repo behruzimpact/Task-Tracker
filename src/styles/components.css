@@ -538,6 +538,7 @@
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   max-height: min(580px, calc(100vh - 24px));
+  max-height: min(580px, calc(100dvh - 24px));
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -724,5 +725,36 @@
 
 @media (max-width: 520px) {
   .timer-btn__time { display: none; }
+}
+
+/* --------------------- Мобильная адаптация ------------------- */
+/* Модальные окна и уведомления на узких экранах */
+@media (max-width: 620px) {
+  .modal-backdrop { padding: 14px; }
+  .modal { max-height: min(88vh, calc(100dvh - 28px)); }
+  .modal__head { padding: 16px 16px 12px; }
+  .modal__body { padding: 0 16px 6px; gap: 14px; }
+  .modal__foot { padding: 14px 16px 16px; flex-wrap: wrap; }
+  .modal__foot .btn { flex: 1 1 auto; min-width: 130px; }
+  .modal__grid { grid-template-columns: 1fr; }
+  .toasts {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+/* iOS Safari зумит страницу, если шрифт в поле меньше 16px */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea { font-size: 16px !important; }
+}
+
+/* Тач-устройства: показываем то, что на десктопе появляется по hover */
+@media (hover: none) {
+  .task-card__actions { opacity: 1; transform: none; }
+  .cat-item__del { opacity: .55; }
 }
 

@@ -228,9 +228,13 @@
   .auth__panel { width: min(520px, 100%); }
 }
 @media (max-width: 620px) {
-  .auth { padding: 28px 18px 40px; gap: 26px; }
+  .auth { padding: 24px 16px calc(40px + env(safe-area-inset-bottom)); gap: 22px; }
+  .auth__aside { gap: 16px; }
   .auth__card { padding: 24px 18px 22px; }
   .auth__title { font-size: 34px; }
+  .auth__sub { font-size: 14px; }
   .feature-list li { font-size: 13px; }
+  /* На телефоне достаточно первых трёх пунктов — форма входа выше по экрану */
+  .feature-list li:nth-child(n + 4) { display: none; }
 }
 

@@ -2,7 +2,7 @@
    TaskFlow · app.css — основное приложение
    ============================================================ */
 
-.app { display: flex; flex-direction: column; min-height: 100vh; }
+.app { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
 
 /* -------------------------- Топбар -------------------------- */
 .topbar {
@@ -13,7 +13,8 @@
   align-items: center;
   gap: 16px;
   min-height: var(--topbar-h);
-  padding: 10px clamp(14px, 2.4vw, 28px);
+  padding: 10px max(clamp(14px, 2.4vw, 28px), env(safe-area-inset-right)) 10px
+    max(clamp(14px, 2.4vw, 28px), env(safe-area-inset-left));
   background: color-mix(in oklab, var(--bg) 74%, transparent);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
@@ -596,10 +597,15 @@
     top: 0; left: 0;
     width: min(310px, 86vw);
     height: 100vh;
+    height: 100dvh;
     max-height: none;
+    padding-top: max(15px, env(safe-area-inset-top));
+    padding-left: max(15px, env(safe-area-inset-left));
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
     border-radius: 0 var(--r-lg) var(--r-lg) 0;
     transform: translateX(-108%);
     transition: transform .42s var(--ease);
+    -webkit-overflow-scrolling: touch;
   }
   .sidebar.is-open { transform: none; box-shadow: var(--shadow-2); }
 }
@@ -608,7 +614,7 @@
   .panel { gap: 18px; padding: 18px; }
   .ring-wrap { --ring-size: 132px; }
   .chart { height: 104px; }
-  .board { grid-template-columns: 1fr; }
+  .board { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 }
 @media (max-width: 720px) {
   .userchip__name, .search__kbd { display: none; }
@@ -621,11 +627,32 @@
   .content__head { align-items: flex-start; }
 }
 @media (max-width: 520px) {
-  .app__body { padding: 14px 12px 40px; }
+  /* Шапка: компактная строка кнопок без переполнения */
+  .topbar { gap: 8px; }
+  .topbar__actions { gap: 8px; }
+  .seg { padding: 3px; }
+  .seg__btn { padding: 7px 9px; }
+  .seg__label { display: none; }
+  .userchip__caret { display: none; }
+  /* Тема переключается из бокового меню — экономим место в шапке */
+  #theme-toggle { display: none; }
+
+  .app__body { padding: 14px 12px calc(46px + env(safe-area-inset-bottom)); }
   .panel { flex-direction: column; align-items: stretch; }
   .ring-wrap { align-self: center; }
   #add-task-btn { padding: 11px 14px; font-size: 0; gap: 0; }
   #add-task-btn span { font-size: 18px; }
+
+  /* Фильтры: селекты по паре в ряд вместо выпадения за экран */
+  .filters__row { gap: 10px; }
+  .filters .select { flex: 1 1 calc(50% - 5px); min-width: 0; }
+  .chip { padding: 8px 14px; }
+
+  /* Карточки: крупнее цели нажатия */
+  .stat-card { padding: 14px 15px; }
+  .task-card { padding: 14px 14px 14px 18px; gap: 11px; }
+  .task-check { width: 30px; height: 30px; }
+  .task-act { width: 34px; height: 34px; font-size: 14px; }
 }
 
 /* ----------------------- Таймер в шапке ---------------------- */

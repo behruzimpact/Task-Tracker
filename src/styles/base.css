@@ -80,6 +80,7 @@ body {
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
   transition: background var(--mid), color var(--mid);
 }
@@ -576,7 +577,7 @@ body.has-pointer .spotlight { opacity: 1; }
 .skeleton--card { height: 96px; border-radius: var(--r-lg); }
 
 /* ------------------------- Экраны --------------------------- */
-.screen { position: relative; min-height: 100vh; }
+.screen { position: relative; min-height: 100vh; min-height: 100dvh; }
 .screen--in { animation: screenIn .55s var(--ease) both; }
 .screen--out { animation: screenOut .3s var(--ease) forwards; }
 
